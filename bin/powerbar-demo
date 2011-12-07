@@ -53,6 +53,11 @@ def demo_4
   total = 100000
   step = 1000
   text = "\e[0mDEMO 4 - Colors!"
+  interstitial = [
+    "Oh, btw, know what?\n",
+    "You may use PowerBar#print to print messages while the bar is running.\n",
+    "Awesome, right?\n"
+  ]
   p = PowerBar.new
   p.settings.tty.finite.template.main = \
         "${<msg>} ${<bar> }\e[0m${<rate>/s} \e[33;1m${<percent>%} " +
@@ -73,6 +78,9 @@ def demo_4
   (0..total).step(step).each do |i|
     p.show({:msg => text, :done => i, :total => total})
     j += 1
+    if 0 == j % 25
+      p.print interstitial.shift
+    end
     sleep 0.1
   end
   p.close
@@ -122,6 +130,9 @@ def demo_7
   (0..total).step(step).each do |i|
     p.show({:msg => text, :done => i, :total => total})
     j += 1
+    if j == 60
+      p.print "Hint: Of course PowerBar#print also works when in :notty-mode\n"
+    end
     sleep 0.1
   end
   p.close
@@ -136,12 +147,15 @@ def demo_8
   p = PowerBar.new
   p.settings.force_mode = :notty
   p.settings.notty.finite.output = Proc.new { |s|
-    log.debug(s) unless s == ''
+    log.debug(s.chomp) unless s == ''
   }
   j = 0
   (0..total).step(step).each do |i|
     p.show({:msg => text, :done => i, :total => total})
     j += 1
+    if j == 60
+      p.print "Hint: Yes, PowerBar#print also works here. ;)\n"
+    end
     sleep 0.1
   end
   p.close
@@ -153,7 +167,7 @@ def demo_9
   step = 1000
 
   puts "DEMO 9 - No output by PowerBar."
-  puts "We only use it to collect stats and then roll our own output...\n---"
+  puts "Here we use it to collect stats silently, and then we roll our own output:\n-"
   p = PowerBar.new
   j = 0
   (0..total).step(step).each do |i|
@@ -168,7 +182,7 @@ def demo_9
       puts "total is: #{p.total}, humanized done is: #{p.h_total}"
       puts "total is: #{p.total}, humanized done is: #{p.h_total}"
       puts "bar is: #{p.bar}"
-      puts "---"
+      puts "-"
     end
     sleep 0.1
   end

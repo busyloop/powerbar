@@ -24,11 +24,10 @@ require 'powerbar/version'
 require 'ansi'
 require 'hashie/mash'
 
+#
+# This is PowerBar - The last progressbar-library you'll ever need.
+#
 class PowerBar
-  #
-  # This is PowerBar - The last progressbar-library you'll ever need.
-  #
-
   STRIP_ANSI = Regexp.compile '\e\[(\d+)(;\d+)?(;\d+)?[m|K]', nil
 
   def initialize(opts={})
@@ -67,7 +66,7 @@ class PowerBar
               # evaluates to something other than nil.
               :main => '${<msg>}: ${[<bar>] }${<rate>/s }${<percent>% }${<elapsed>}${, ETA: <eta>}',
               :post => '',             # printed after the progressbar
-              :wipe => "\e[1000D\e[K", # printed when 'wipe' is called
+              :wipe => "\e[0m\e[1000D\e[K", # printed when 'wipe' is called
               :close => "\e[?25h\n",   # printed when 'close' is called
               :exit => "\e[?25h",      # printed if the process exits unexpectedly
               :barchar => "\u2588",    # fill-char for the progress-bar
@@ -81,7 +80,7 @@ class PowerBar
               :pre  => "\e[1000D\e[?25l",
               :main => "${<msg>}: ${<done> }${<rate>/s }${<elapsed>}",
               :post => "\e[K",
-              :wipe => "\e[1000D\e[K",
+              :wipe => "\e[0m\e[1000D\e[K",
               :close => "\e[?25h\n",
               :exit => "\e[?25h",
               :barchar => "\u2588",
@@ -126,12 +125,12 @@ class PowerBar
     }.merge(opts) )
   end
 
-  # Access the settings-hash
+  # settings-hash
   def settings
     @state.settings
   end
 
-  # Access settings under current scope (e.g. tty.infinite)
+  # settings under current scope (e.g. tty.infinite)
   def scope
     scope_hash = [settings.force_mode,state.total].hash
     return @state.scope unless @state.scope.nil? or scope_hash != @state.scope_hash
@@ -152,7 +151,7 @@ class PowerBar
     state.scope
   end
 
-  # Hook at_exit to ensure cleanup when we get interrupted
+  # Hook at_exit to ensure cleanup if we get interrupted
   def hook_exit
     return if @@exit_hooked
     if scope.template.exit
@@ -163,11 +162,17 @@ class PowerBar
     @@exit_hooked = true
   end
 
-  # This prints the close-template which normally prints a newline.
+  # Print the close-template and defuse the exit-hook.
   # Be a good citizen, always close your PowerBars!
   def close
     scope.output.call(scope.template.close) unless scope.template.close.nil?
     state.closed = true
+  end
+
+  # Remove progress-bar, print a message
+  def print(s)
+    wipe
+    scope.output.call(s)
   end
 
   # Update state (and settings) without printing anything.
@@ -182,18 +187,20 @@ class PowerBar
     @rate.append(state.time_now, state.done)
   end
 
-  # Display the PowerBar.
+  # Output the PowerBar.
+  # Returns true if bar was shown, false otherwise.
   def show(opts={})
-    if scope.interval <= Time.now - state.time_last_show
-      update(opts)
-      hook_exit
+    return false if scope.interval > Time.now - state.time_last_show
 
-      state.time_last_show = Time.now
-      state.closed = false
-      scope.output.call(scope.template.pre)
-      scope.output.call(render)
-      scope.output.call(scope.template.post)
-    end
+    update(opts)
+    hook_exit
+
+    state.time_last_show = Time.now
+    state.closed = false
+    scope.output.call(scope.template.pre)
+    scope.output.call(render)
+    scope.output.call(scope.template.post)
+    true
   end
 
   # Render the PowerBar and return as a string.
@@ -343,19 +350,19 @@ class PowerBar
 
   class Rate < Array
     attr_reader :last_sample_at
-    def initialize(at, len, max_interval=10, interval_step=0.1)
+    def initialize(at, window, max_interval=10, interval_step_up=0.1)
       super([])
       @last_sample_at = at
       @sample_interval = 0
-      @sample_interval_step = interval_step
+      @sample_interval_step_up = interval_step_up
       @sample_interval_max = max_interval
       @counter = 0
-      @len = len
+      @window = window
     end
 
     def append(at, v)
       return if @sample_interval > at - @last_sample_at
-      @sample_interval += @sample_interval_step if @sample_interval < @sample_interval_max
+      @sample_interval += @sample_interval_step_up if @sample_interval < @sample_interval_max
 
       rate = (v - @counter) / (at - @last_sample_at).to_f
       return if rate.nan?
@@ -364,9 +371,9 @@ class PowerBar
       @counter = v
 
       self << rate
-      if length > @len
-        shift
-      end
+      shift while @window < length
+
+      self
     end
 
     def sum
