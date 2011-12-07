@@ -50,7 +50,7 @@ Then look at the {source-code}[https://github.com/busyloop/powerbar/blob/master/
 
  p = PowerBar.new
  (0..total).step(step).each do |i|
-   p.show({:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total})
+   p.show(:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total)
    sleep 0.1
  end
  p.close
