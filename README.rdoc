@@ -23,7 +23,7 @@ This is PowerBar - The last progressbar-library you'll ever need.
 
 == Screenshot
 
-{screenshot}[https://github.com/busyloop/powerbar/raw/master/ass/screenshot.png]
+https://github.com/busyloop/powerbar/raw/master/ass/screenshot.png
 
 
 == Installation
