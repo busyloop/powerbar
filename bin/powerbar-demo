@@ -1,0 +1,236 @@
+#!/usr/bin/env ruby
+
+require 'powerbar'
+
+# DEMO 1
+def demo_1
+  total = 100000
+  step = 1000
+
+  p = PowerBar.new
+  (0..total).step(step).each do |i|
+    p.show({:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total})
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 2
+def demo_2
+  total = 100000
+  step = 1000
+  text = " "*30 + "Need to change text in mid-progress?     No Problemo!" +
+         " "*5 + "As seen in: DEMO 2 - Scrolling madness"
+  p = PowerBar.new
+  j = 0
+  (0..total).step(step).each do |i|
+    woah = sprintf('%-26s', text[j%text.length..j%text.length+25])
+    p.show({:msg => woah, :done => i, :total => total})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 3
+def demo_3
+  total = 100000
+  step = 1000
+  text = "DEMO 3 - Don't sweat your message width too much, we can squeeze it some"
+  p = PowerBar.new
+  j = 0
+  (0..total).step(step).each do |i|
+    woah = text[0..j]
+    p.show({:msg => woah, :done => i, :total => total})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 4
+def demo_4
+  total = 100000
+  step = 1000
+  text = "\e[0mDEMO 4 - Colors!"
+  p = PowerBar.new
+  p.settings.tty.finite.template.main = \
+        "${<msg>} ${<bar> }\e[0m${<rate>/s} \e[33;1m${<percent>%} " +
+        "\e[36;1m${<elapsed>}\e[31;1m${ ETA: <eta>}"
+  p.settings.tty.finite.template.padchar = "\e[30;1m\u2589"
+  p.settings.tty.finite.template.barchar = "\e[34;1m\u2589"
+  p.settings.tty.finite.template.exit = "\e[?25h\e[0m"  # clean up after us
+  p.settings.tty.finite.template.close = "\e[?25h\e[0m\n" # clean up after us
+  p.settings.tty.finite.output = Proc.new{ |s|
+    # The default output function truncates our
+    # string to to enable the "squeezing" as seen in the
+    # previous demo. This doesn't mix so well with ANSI-colors,
+    # so if you want to use colors you'll have to make the output
+    # a little more naive. Like this:
+    $stderr.print s
+  }
+  j = 0
+  (0..total).step(step).each do |i|
+    p.show({:msg => text, :done => i, :total => total})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 5
+def demo_5
+  total = 100000
+  step = 1000
+  text = "DEMO 5 - When total is :unknown then we only display what we know"
+  p = PowerBar.new
+  j = 0
+  (0..total).step(step).each do |i|
+    p.show({:msg => text, :done => i, :total => :unknown})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 6
+def demo_6
+  total = 100000
+  step = 1000
+  text = "DEMO 6 - Still :unknown, now with a different template"
+  p = PowerBar.new
+  p.settings.tty.infinite.template.main = \
+      '${<msg>} > ${Rate: <rate>/s, }elapsed: ${<elapsed>}'
+  j = 0
+  (0..total).step(step).each do |i|
+    p.show({:msg => text, :done => i, :total => :unknown})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+
+# DEMO 7
+def demo_7
+  total = 100000
+  step = 1000
+  text = "DEMO 7 - Forcing notty mode"
+  p = PowerBar.new
+  p.settings.force_mode = :notty
+  j = 0
+  (0..total).step(step).each do |i|
+    p.show({:msg => text, :done => i, :total => total})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 8
+def demo_8
+  total = 100000
+  step = 1000
+  log = Logger.new(STDOUT)
+  text = "DEMO 8 - Forcing notty mode and using a logger"
+  p = PowerBar.new
+  p.settings.force_mode = :notty
+  p.settings.notty.finite.output = Proc.new { |s|
+    log.debug(s) unless s == ''
+  }
+  j = 0
+  (0..total).step(step).each do |i|
+    p.show({:msg => text, :done => i, :total => total})
+    j += 1
+    sleep 0.1
+  end
+  p.close
+end
+
+# DEMO 9
+def demo_9
+  total = 100000
+  step = 1000
+
+  puts "DEMO 9 - No output by PowerBar."
+  puts "We only use it to collect stats and then roll our own output...\n---"
+  p = PowerBar.new
+  j = 0
+  (0..total).step(step).each do |i|
+    # update() does not output anything, it only updates (who would've guessed!)
+    p.update({:done => i, :total => total})
+    j += 1
+    if 0 == j % 50
+      puts "elapsed is: #{p.elapsed}, humanized elapsed is: #{p.h_elapsed}"
+      puts "percent is: #{p.percent}, humanized percent is: #{p.h_percent}"
+      puts "eta is: #{p.eta}, humanized eta is: #{p.h_eta}"
+      puts "done is: #{p.done}, humanized done is: #{p.h_done}"
+      puts "total is: #{p.total}, humanized done is: #{p.h_total}"
+      puts "total is: #{p.total}, humanized done is: #{p.h_total}"
+      puts "bar is: #{p.bar}"
+      puts "---"
+    end
+    sleep 0.1
+  end
+  #p.close  # no need to close this one
+end
+
+# DEMO 10
+def demo_10
+  total = 100000
+  step = 1000
+  text = " " * 30 + "DEMO 10 - OMGWTFBBQ!"
+  p = PowerBar.new
+  p.settings.tty.finite.template.padchar = "\e[30;1m\u2589"
+  p.settings.tty.finite.template.barchar = "\e[34;1m\u2589"
+  p.settings.tty.finite.output = Proc.new{ |s| $stderr.print s }
+  j = 0
+  total = 300000000
+  step = 1000000
+  
+  spin = ')|(|'
+  spun = ',.oO^`^Oo'
+  
+  (0..total).step(step).each do |i|
+    p.send(:state).scope = nil # omghax, don't try this at home!
+    wtf = sprintf('%-26s', text[j%text.length..j%text.length+25])
+          .gsub(/./) { |char| char.send(rand(2).zero? ? :downcase : :upcase) }
+    p.show(
+      {
+        :msg => wtf,
+        :done => i,
+        :total => total,
+        :settings => {
+          :tty => {
+            :finite => {
+              :template => {
+                :barchar => "\e[36;1m" + spin[j%spin.length],
+                :padchar => "\e[0;34m" + spun[j%spun.length],
+                :main => "\e[#{rand(1)};3#{rand(7)}m${<msg>}\e[0m "+
+                         "\e[0m${<bar> }\e[0m${<rate>/s} "+
+                         "\e[33;1m${<percent>%} " +
+                         "\e[36;1m${<elapsed>}\e[31;1m${ ETA: <eta>}",
+                :exit => "\e[?25h\e[0m",
+                :close => "\e[?25h\e[0m\n"
+              }
+            }
+          }
+        } # chrr..
+      }
+    )
+    j += 1
+    sleep 0.1
+  end
+  p.wipe
+  p.close
+end
+
+begin
+  method("demo_#{ARGV[0]}".to_sym).call
+rescue
+  (1..10).each do |i|
+    method("demo_#{i}".to_sym).call
+    puts "---" 
+    sleep 1
+  end
+end
