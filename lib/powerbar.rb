@@ -38,7 +38,9 @@ class PowerBar
       :time_last_update => Time.at(0),  # <- unless you know
       :time_start => nil,               # <- what you're doing!
       :time_now => nil,                 # <- 
-      :msg => 'PowerBar!', # <--- this one is safe to mess with ;)
+      :msg => 'PowerBar!',
+      :done => 0,
+      :total => :unknown,
       :settings => {
         :rate_sample_max_interval => 10,  # See PowerBar::Rate
         :rate_sample_window => 6,         # See PowerBar::Rate
