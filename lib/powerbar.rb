@@ -220,15 +220,11 @@ class PowerBar
   # Returns nil if the bar-length would be == 0.
   def bar
     return nil if state.total.is_a? Symbol
-    blank   = render_template(:main, skip=[:bar])
-    twid    = state.scope_at[0] == :tty ? terminal_width() : scope.line_width
-    barlen  = [twid - blank.gsub(STRIP_ANSI, '').length, 0].max
-    done    = state.done
-    total   = state.total
-    barchar = scope.template.barchar
-    padchar = scope.template.padchar
-    fill = [0,[(done.to_f/total*barlen).to_i,barlen].min].max
-    thebar = barchar * fill + padchar * [barlen - fill,0].max
+    skel   = render_template(:main, skip=[:bar])
+    lwid   = state.scope_at[0] == :tty ? terminal_width() : scope.line_width
+    barlen = [lwid - skel.gsub(STRIP_ANSI, '').length, 0].max
+    fill   = [0,[(state.done.to_f/state.total*barlen).to_i,barlen].min].max
+    thebar = scope.template.barchar * fill + scope.template.padchar * [barlen - fill,0].max
     thebar.length == 0 ? nil : thebar
   end
 
