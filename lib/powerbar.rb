@@ -44,6 +44,7 @@ class PowerBar
         :rate_sample_max_interval => 10,  # See PowerBar::Rate
         :rate_sample_window => 6,         # See PowerBar::Rate
         :force_mode => nil, # set to :tty or :notty to force either mode
+        :kilo => 1024, # Change this to 1000 when measuring network traffic or such.
         :tty => {      # <== Settings when stdout is a tty
           :finite => { # <== Settings for a finite progress bar (when total != :unknown)
             # The :output Proc is called to draw on the screen --------------------.
@@ -182,8 +183,8 @@ class PowerBar
     state.time_now = Time.now
 
     @rate ||= PowerBar::Rate.new(state.time_now, 
-                                         state.settings.rate_sample_window,
-                                         state.settings.rate_sample_max_interval)
+                                 state.settings.rate_sample_window,
+                                 state.settings.rate_sample_max_interval)
     @rate.append(state.time_now, state.done)
   end
 
@@ -328,16 +329,17 @@ class PowerBar
   end
 
   HQ_UNITS = %w(b k M G T).freeze
-  def humanize_quantity(number, format='%n%u', base=1024)
+  def humanize_quantity(number, format='%n%u')
     return nil if number.nil? 
     return nil if number.is_a? Float and (number.nan? or number.infinite?)
-    return number if number.to_i < base
+    kilo = settings.kilo
+    return number if number.to_i < kilo
 
     max_exp  = HQ_UNITS.size - 1
     number   = Float(number)
-    exponent = (Math.log(number) / Math.log(base)).to_i
+    exponent = (Math.log(number) / Math.log(kilo)).to_i
     exponent = max_exp if exponent > max_exp
-    number  /= base ** exponent
+    number  /= kilo ** exponent
 
     unit = HQ_UNITS[exponent]
     return format.gsub(/%n/, number.round(1).to_s).gsub(/%u/, unit)
