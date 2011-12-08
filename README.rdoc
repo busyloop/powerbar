@@ -17,9 +17,9 @@ This is PowerBar - The last progressbar-library you'll ever need.
   information (percentage-done, throughput, ETA, etc.) and then use the
   computed values elsewhere in your app.
 
-* All state can be updated at any time. If you're monitoring a
-  multi-part operation you can change the status-message of a running
-  PowerBar at any time.
+* All state can be updated at any time. For example: If you're monitoring a
+  multi-part operation then you can change the status-message of a running
+  PowerBar to reflect the current state.
 
 == Screenshot
 
@@ -49,6 +49,12 @@ Then look at the {source-code}[https://github.com/busyloop/powerbar/blob/master/
  step = 1000
 
  p = PowerBar.new
+
+ # Override some default values to demonstrate how the settings work
+ p.settings.tty.finite.template.barchar = '*'
+ p.settings.tty.finite.template.padchar = '.'
+
+ # Dummy loop to simulate some progress
  (0..total).step(step).each do |i|
    p.show(:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total)
    sleep 0.1
