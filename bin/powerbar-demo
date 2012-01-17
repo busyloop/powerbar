@@ -248,7 +248,7 @@ def demo_10
     sleep 0.1
   end
   p.wipe
-  p.close
+  puts "Thanks for watching! ;-)"
 end
 
 begin
