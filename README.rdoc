@@ -13,7 +13,7 @@ This is PowerBar - The last progressbar-library you'll ever need.
 
 * Fully customizable; all output is template-driven.
 
-* All output is optional. You may use PowerBar to silently collect progress
+* All output is optional. You may set PowerBar to silently collect progress
   information (percentage-done, throughput, ETA, etc.) and then use the
   computed values elsewhere in your app.
 
@@ -50,7 +50,7 @@ Then look at the {source-code}[https://github.com/busyloop/powerbar/blob/master/
 
  p = PowerBar.new
 
- # Override some default values to demonstrate how the settings work
+ # Override some defaults to demonstrate how the settings work
  p.settings.tty.finite.template.barchar = '*'
  p.settings.tty.finite.template.padchar = '.'
 
