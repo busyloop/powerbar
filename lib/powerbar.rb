@@ -49,7 +49,8 @@ class PowerBar
           :finite => { # <== Settings for a finite progress bar (when total != :unknown)
             # The :output Proc is called to draw on the screen --------------------.
             :output => Proc.new{ |s| $stderr.print s[0..terminal_width()-1] }, # <-'
-            :interval => 0.1, # Minimum interval between screen refreshes (in seconds)
+            :interval => 0.1,  # Minimum interval between screen refreshes (in seconds)
+            :show_eta => true, # Set to false if you want to hide the ETA without changing the template
             :template => { # <== template for a finite progress bar on a tty
               :pre  => "\e[1000D\e[?25l",  # printed before the progress-bar
               #
@@ -77,6 +78,7 @@ class PowerBar
           :infinite => { # <== Settings for an infinite progress "bar" (when total is :unknown)
             :output => Proc.new{ |s| $stderr.print s[0..terminal_width()-1] },
             :interval => 0.1,
+            :show_eta => false,
             :template => {
               :pre  => "\e[1000D\e[?25l",
               :main => "${<msg>}: ${<done> }${<rate>/s }${<elapsed>}",
@@ -94,6 +96,7 @@ class PowerBar
             # You may want to hook in your favorite Logger-Library here. ---.
             :output => Proc.new{ |s| $stderr.print s },  # <----------------'
             :interval => 1,
+            :show_eta => true,
             :line_width => 78, # Maximum output line width
             :template => {
               :pre  => '',
@@ -109,6 +112,7 @@ class PowerBar
           :infinite => {
             :output => Proc.new{ |s| $stderr.print s },
             :interval => 1,
+            :show_eta => false,
             :line_width => 78,
             :template => {
               :pre  => "",
@@ -165,7 +169,19 @@ class PowerBar
 
   # Print the close-template and defuse the exit-hook.
   # Be a good citizen, always close your PowerBars!
-  def close
+  def close(fill=false)
+    show(
+      {
+        :done => fill && !state.total.is_a?(Symbol) ? state.total : state.done,
+        :tty => {
+                  :finite => { :show_eta => false },
+                  :infinite => { :show_eta => false },
+                },
+        :notty => {
+                  :finite => { :show_eta => false },
+                  :infinite => { :show_eta => false },
+                },
+      }, true)
     scope.output.call(scope.template.close) unless scope.template.close.nil?
     state.closed = true
   end
@@ -190,8 +206,8 @@ class PowerBar
 
   # Output the PowerBar.
   # Returns true if bar was shown, false otherwise.
-  def show(opts={})
-    return false if scope.interval > Time.now - state.time_last_show
+  def show(opts={}, force=false)
+    return false if scope.interval > Time.now - state.time_last_show and force == false
 
     update(opts)
     hook_exit
@@ -246,6 +262,7 @@ class PowerBar
 
   # returns nil when eta is < 1 second
   def h_eta
+    return nil unless scope.show_eta
     1 < eta ? humanize_interval(eta) : nil
   end
 

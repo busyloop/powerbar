@@ -8,11 +8,23 @@ def demo_1
   step = 1000
 
   p = PowerBar.new
+
+  # This is how you alter the settings.
+  # (see the source-code for all available settings)
+  p.settings.tty.finite.show_eta = true
+
   (0..total).step(step).each do |i|
     p.show({:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total})
     sleep 0.1
   end
-  p.close
+  
+  # close(true) will set the bar to 100% before closing.
+  # use this when you are sure your operation has finished but
+  # for some reason 'done' may still be smaller than 'total'.
+  #
+  # this is not necessary in this example, and usually a bad idea,
+  # but demonstrating here so you know it exists.
+  p.close(true)
 end
 
 # DEMO 2
