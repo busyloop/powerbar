@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = "~> 1.9.2"
 
   s.add_dependency "ansi", "~> 1.4.0"
-  s.add_dependency "hashie", "~> 1.1.0"
+  s.add_dependency "hashie", ">= 1.1.0"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
