@@ -308,7 +308,7 @@ class PowerBar
   end
 
   def terminal_width
-    ANSI::Terminal.terminal_width
+    ANSI::Terminal.terminal_width - 1
   end
 
   private
