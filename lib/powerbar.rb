@@ -236,7 +236,7 @@ class PowerBar
   # Returns nil if the bar-length would be == 0.
   def bar
     return nil if state.total.is_a? Symbol
-    skel   = render_template(:main, skip=[:bar])
+    skel   = render_template(:main, [:bar])
     lwid   = state.scope_at[0] == :tty ? terminal_width() : scope.line_width
     barlen = [lwid - skel.gsub(STRIP_ANSI, '').length, 0].max
     fill   = [0,[(state.done.to_f/state.total*barlen).to_i,barlen].min].max
@@ -267,7 +267,7 @@ class PowerBar
   end
 
   def elapsed
-    e = (state.time_now - state.time_start).to_f
+    (state.time_now - state.time_start).to_f
   end
 
   def h_elapsed
@@ -333,7 +333,7 @@ class PowerBar
         t = t[1..-2]
         begin
           sub = self.send(('h_'+t).to_sym)
-        rescue NoMethodError => e
+        rescue NoMethodError
           raise NameError, "Invalid token '#{t}' in template '#{tplid}'"
         end
       end[2..-2]
