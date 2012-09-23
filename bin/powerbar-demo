@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'powerbar'
+require 'logger'
 
 # DEMO 1
 def demo_1
