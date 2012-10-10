@@ -221,10 +221,10 @@ def demo_10
   
   (0..total).step(step).each do |i|
     p.send(:state).scope = nil # omghax, don't try this at home!
-    wtf = sprintf('%-26s', text[j%text.length..j%text.length+25])
-          .gsub(/./) { |char| char.send(rand(2).zero? ? :downcase : :upcase) }
+    wtf_range = (j % text.length)..((j % text.length) + 25)
+    wtf = sprintf('%-26s', text[wtf_range])
+    wtf.gsub!(/./) { |char| rand(2).zero? ? char.downcase : char.upcase }
     p.show(
-      {
         :msg => wtf,
         :done => i,
         :total => total,
@@ -243,8 +243,7 @@ def demo_10
               }
             }
           }
-        } # chrr..
-      }
+        }
     )
     j += 1
     sleep 0.1

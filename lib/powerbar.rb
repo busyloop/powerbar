@@ -288,7 +288,7 @@ class PowerBar
   end
 
   def h_rate
-    humanize_quantity(rate.round(1))
+    humanize_quantity(round(rate, 1))
   end
 
   def total
@@ -316,6 +316,15 @@ class PowerBar
     @state
   end
 
+  def round(number, digit)
+    if number.zero? or number.nan?
+      number
+    else
+      factor = 10.0 ** digit
+      (number * factor).round / factor
+    end
+  end
+
   # Cap'n Hook
   def exit!
     return if state.closed
@@ -327,17 +336,17 @@ class PowerBar
     skip.each do |s|
       tpl = tpl.gsub(/\$\{([^<]*)<#{s}>([^}]*)\}/, '\1\2')
     end
-    tpl.gsub(/\${[^}]+}/) do |var|
+    tpl.gsub(/\$\{[^\}]+\}/) do |var|
       sub = nil
       r = var.gsub(/<[^>]+>/) do |t|
         t = t[1..-2]
         begin
-          sub = self.send(('h_'+t).to_sym)
+          sub = send "h_#{t}"
         rescue NoMethodError
           raise NameError, "Invalid token '#{t}' in template '#{tplid}'"
         end
-      end[2..-2]
-      sub.nil? ? '' : r
+      end
+      sub.nil? ? '' : r[2..-2]
     end
   end
 
@@ -355,7 +364,7 @@ class PowerBar
     number  /= kilo ** exponent
 
     unit = HQ_UNITS[exponent]
-    return format.gsub(/%n/, number.round(1).to_s).gsub(/%u/, unit)
+    return format.gsub(/%n/, round(number, 1).to_s).gsub(/%u/, unit)
   end
 
   def humanize_interval(s)

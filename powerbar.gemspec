@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/busyloop/powerbar"
   s.summary     = %q{The last progressbar-library you'll ever need}
   s.description = %q{The last progressbar-library you'll ever need}
-  s.required_ruby_version = ">= 1.9.2"
   s.license     = "MIT"
 
   s.add_dependency "ansi", "~> 1.4.0"
