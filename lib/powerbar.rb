@@ -318,7 +318,7 @@ class PowerBar
   end
 
   def round(number, digit)
-    if number.zero? or number.nan?
+    if number.zero? or number.nan? or number.infinite?
       number
     else
       factor = 10.0 ** digit
