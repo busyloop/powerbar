@@ -29,6 +29,7 @@ require 'hashie/mash'
 #
 class PowerBar
   STRIP_ANSI = Regexp.compile '\e\[(\d+)(;\d+)?(;\d+)?[m|K]', nil
+  RUBY18 = RUBY_VERSION[0..2] == "1.8"
 
   def initialize(opts={})
     @@exit_hooked = false
@@ -71,8 +72,8 @@ class PowerBar
               :wipe => "\e[0m\e[1000D\e[K", # printed when 'wipe' is called
               :close => "\e[?25h\n",   # printed when 'close' is called
               :exit => "\e[?25h",      # printed if the process exits unexpectedly
-              :barchar => "\u2588",    # fill-char for the progress-bar
-              :padchar => "\u2022"     # padding-char for the progress-bar
+              :barchar => RUBY18 ? '#' : "\u2588", # fill-char for the progress-bar
+              :padchar => RUBY18 ? '.' : "\u2022"  # padding-char for the progress-bar
             },
           },
           :infinite => { # <== Settings for an infinite progress "bar" (when total is :unknown)
@@ -86,8 +87,8 @@ class PowerBar
               :wipe => "\e[0m\e[1000D\e[K",
               :close => "\e[?25h\n",
               :exit => "\e[?25h",
-              :barchar => "\u2588",
-              :padchar => "\u2022"
+              :barchar => RUBY18 ? '#' : "\u2588",
+              :padchar => RUBY18 ? '.' : "\u2022"
             },
           }
         },

@@ -76,8 +76,8 @@ def demo_4
   p.settings.tty.finite.template.main = \
         "${<msg>} ${<bar> }\e[0m${<rate>/s} \e[33;1m${<percent>%} " +
         "\e[36;1m${<elapsed>}\e[31;1m${ ETA: <eta>}"
-  p.settings.tty.finite.template.padchar = "\e[30;1m\u2589"
-  p.settings.tty.finite.template.barchar = "\e[34;1m\u2589"
+  p.settings.tty.finite.template.padchar = "\e[30;1m#{p.settings.tty.finite.template.padchar}"
+  p.settings.tty.finite.template.barchar = "\e[34;1m#{p.settings.tty.finite.template.barchar}"
   p.settings.tty.finite.template.exit = "\e[?25h\e[0m"  # clean up after us
   p.settings.tty.finite.template.close = "\e[?25h\e[0m\n" # clean up after us
   p.settings.tty.finite.output = Proc.new{ |s|
@@ -209,8 +209,8 @@ def demo_10
   step = 1000
   text = " " * 30 + "DEMO 10 - OMGWTFBBQ!"
   p = PowerBar.new
-  p.settings.tty.finite.template.padchar = "\e[30;1m\u2589"
-  p.settings.tty.finite.template.barchar = "\e[34;1m\u2589"
+  p.settings.tty.finite.template.padchar = "\e[30;1m#{p.settings.tty.finite.template.padchar}"
+  p.settings.tty.finite.template.barchar = "\e[34;1m#{p.settings.tty.finite.template.barchar}"
   p.settings.tty.finite.output = Proc.new{ |s| $stderr.print s }
   j = 0
   total = 300000000
@@ -232,8 +232,8 @@ def demo_10
           :tty => {
             :finite => {
               :template => {
-                :barchar => "\e[36;1m" + spin[j%spin.length],
-                :padchar => "\e[0;34m" + spun[j%spun.length],
+                :barchar => "\e[36;1m#{spin[j%spin.length..j%spin.length]}",
+                :padchar => "\e[0;34m#{spun[j%spun.length..j%spun.length]}",
                 :main => "\e[#{rand(1)};3#{rand(7)}m${<msg>}\e[0m "+
                          "\e[0m${<bar> }\e[0m${<rate>/s} "+
                          "\e[33;1m${<percent>%} " +
