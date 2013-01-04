@@ -25,7 +25,7 @@ def demo_1
   # for some reason 'done' may still be smaller than 'total'.
   #
   # this is not necessary in this example, and usually a bad idea,
-  # but demonstrating here so you know it exists.
+  # but demonstrated here so you know it exists.
   p.close(true)
 end
 
@@ -81,11 +81,11 @@ def demo_4
   p.settings.tty.finite.template.exit = "\e[?25h\e[0m"  # clean up after us
   p.settings.tty.finite.template.close = "\e[?25h\e[0m\n" # clean up after us
   p.settings.tty.finite.output = Proc.new{ |s|
-    # The default output function truncates our
-    # string to to enable the "squeezing" as seen in the
+    # The default output-function truncates our
+    # string to enable the "squeezing" as seen in the
     # previous demo. This doesn't mix so well with ANSI-colors,
-    # so if you want to use colors you'll have to make the output
-    # a little more naive. Like this:
+    # thus if you want to use colors you'll have to make the
+    # output-function a little more naive. Like this:
     $stderr.print s
   }
   j = 0
