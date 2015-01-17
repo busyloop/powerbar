@@ -1,8 +1,8 @@
-= PowerBar
+# PowerBar
 
 This is PowerBar - The last progressbar-library you'll ever need.
 
-== Features
+## Features
 
 * Detects when stdout is not a terminal and automatically falls back to logging
   * Does not clutter your log-files with ansi-codes!
@@ -21,54 +21,54 @@ This is PowerBar - The last progressbar-library you'll ever need.
   multi-part operation then you can change the status-message of a running
   PowerBar to reflect the current state.
 
-== Screenshot
+## Screenshot
 
-{screenshot}[https://github.com/busyloop/powerbar/raw/master/ass/screenshot.png?raw=true]
+![screenshot](https://github.com/busyloop/powerbar/raw/master/ass/screenshot.png?raw=true)
 
+## Installation
 
-== Installation
+`gem install powerbar`
 
- gem install powerbar
-
-== Getting Started
+## Getting Started
 
 Watch the demo that was installed along with the gem:
 
- powerbar-demo
+`powerbar-demo`
 
-Then look at the {source-code}[https://github.com/busyloop/powerbar/blob/master/bin/powerbar-demo] of the demo. Pretty much all use-cases are covered in there, including templates and how to hook in your own logger.
+Then look at the [source-code](https://github.com/busyloop/powerbar/blob/master/bin/powerbar-demo) of the demo. Pretty much all use-cases are covered in there, including templates and how to hook in your own logger.
 
 
-== Example (for the impatient)
+## Example (for the impatient)
 
- #!/usr/bin/env ruby
+```
+#!/usr/bin/env ruby
 
- require 'powerbar'
+require 'powerbar'
 
- total = 100000
- step = 1000
+total = 100000
+step = 1000
 
- p = PowerBar.new
+p = PowerBar.new
 
- # Override some defaults to demonstrate how the settings work
- p.settings.tty.finite.template.barchar = '*'
- p.settings.tty.finite.template.padchar = '.'
+# Override some defaults to demonstrate how the settings work
+p.settings.tty.finite.template.barchar = '*'
+p.settings.tty.finite.template.padchar = '.'
 
- # Dummy loop to simulate some progress
- (0..total).step(step).each do |i|
-   p.show(:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total)
-   sleep 0.1
- end
- p.close
+# Dummy loop to simulate some progress
+(0..total).step(step).each do |i|
+  p.show(:msg => 'DEMO 1 - Ten seconds of progress', :done => i, :total => total)
+  sleep 0.1
+end
+p.close
+```
 
-== Documentation?
+## Documentation?
 
-Use the {source}[https://github.com/busyloop/powerbar/blob/master/lib/powerbar.rb], Luke!
+Use the [source](https://github.com/busyloop/powerbar/blob/master/lib/powerbar.rb), Luke!
 
-== License (MIT)
+## License (MIT)
 
 Copyright (C) 2011 by moe@busyloop.net
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
