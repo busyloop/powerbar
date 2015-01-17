@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{The last progressbar-library you'll ever need}
   s.license     = "MIT"
 
-  s.add_dependency "ansi", "~> 1.4.0"
+  s.add_dependency "ansi", "~> 1.5.0"
   s.add_dependency "hashie", ">= 1.1.0"
 
   s.files         = `git ls-files`.split("\n")
