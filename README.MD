@@ -21,9 +21,9 @@ This is PowerBar - The last progressbar-library you'll ever need.
   multi-part operation then you can change the status-message of a running
   PowerBar to reflect the current state.
 
-## Screenshot
+## Demo
 
-![screenshot](https://github.com/busyloop/powerbar/raw/master/ass/screenshot.png?raw=true)
+![screencast](https://github.com/busyloop/powerbar/raw/master/ass/screencast.gif?raw=true)
 
 ## Installation
 
