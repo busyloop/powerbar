@@ -37,7 +37,7 @@ class PowerBar
       :time_last_show => Time.at(0),    # <- don't mess with us
       :time_last_update => Time.at(0),  # <- unless you know
       :time_start => nil,               # <- what you're doing!
-      :time_now => nil,                 # <- 
+      :time_now => nil,                 # <-
       :msg => 'PowerBar!',
       :done => 0,
       :total => :unknown,
@@ -199,7 +199,7 @@ class PowerBar
     state.time_start ||= Time.now
     state.time_now = Time.now
 
-    @rate ||= PowerBar::Rate.new(state.time_now, 
+    @rate ||= PowerBar::Rate.new(state.time_now,
                                  state.settings.rate_sample_window,
                                  state.settings.rate_sample_max_interval)
     @rate.append(state.time_now, state.done)
@@ -353,7 +353,7 @@ class PowerBar
 
   HQ_UNITS = %w(b k M G T).freeze
   def humanize_quantity(number, format='%n%u')
-    return nil if number.nil? 
+    return nil if number.nil?
     return nil if number.is_a? Float and (number.nan? or number.infinite?)
     kilo = settings.kilo
     return number if number.to_i < kilo
