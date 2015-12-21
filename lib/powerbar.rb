@@ -53,7 +53,7 @@ class PowerBar
             :interval => 0.1,  # Minimum interval between screen refreshes (in seconds)
             :show_eta => true, # Set to false if you want to hide the ETA without changing the template
             :template => { # <== template for a finite progress bar on a tty
-              :pre  => "\e[1000D\e[?25l",  # printed before the progress-bar
+              :pre  => "\e[1G\e[?25l",  # printed before the progress-bar
               #
               # :main is the progressbar template
               #
