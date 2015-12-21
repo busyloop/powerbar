@@ -309,7 +309,14 @@ class PowerBar
   end
 
   def terminal_width
-    ANSI::Terminal.terminal_width - 1
+    if /solaris/ =~ RUBY_PLATFORM && (`stty` =~ /\brows = (\d+).*\bcolumns = (\d+)/)
+      w, r = [$2, $1]
+    else
+      w, r = `stty size 2>/dev/null`.split.reverse
+    end
+    w = `tput cols` unless w
+    w = w.to_i if w
+    w
   end
 
   private
