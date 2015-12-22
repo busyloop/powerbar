@@ -69,7 +69,7 @@ class PowerBar
               # evaluates to something other than nil.
               :main => '${<msg>}: ${[<bar>] }${<rate>/s }${<percent>% }${<elapsed>}${, ETA: <eta>}',
               :post => '',             # printed after the progressbar
-              :wipe => "\e[0m\e[1000D\e[K", # printed when 'wipe' is called
+              :wipe => "\e[0m\e[1G\e[K", # printed when 'wipe' is called
               :close => "\e[?25h\n",   # printed when 'close' is called
               :exit => "\e[?25h",      # printed if the process exits unexpectedly
               :barchar => RUBY18 ? '#' : "\u2588", # fill-char for the progress-bar
@@ -81,10 +81,10 @@ class PowerBar
             :interval => 0.1,
             :show_eta => false,
             :template => {
-              :pre  => "\e[1000D\e[?25l",
+              :pre  => "\e[1G\e[?25l",
               :main => "${<msg>}: ${<done> }${<rate>/s }${<elapsed>}",
               :post => "\e[K",
-              :wipe => "\e[0m\e[1000D\e[K",
+              :wipe => "\e[0m\e[1G\e[K",
               :close => "\e[?25h\n",
               :exit => "\e[?25h",
               :barchar => RUBY18 ? '#' : "\u2588",
