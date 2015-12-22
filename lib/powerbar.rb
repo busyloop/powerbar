@@ -21,7 +21,6 @@
 #
 
 require 'powerbar/version'
-require 'ansi/terminal'
 require 'hashie/mash'
 
 #
