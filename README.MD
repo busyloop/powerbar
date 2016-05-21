@@ -1,4 +1,4 @@
-# PowerBar
+# PowerBar [![Gem Version](https://badge.fury.io/rb/powerbar.svg)](https://badge.fury.io/rb/powerbar)
 
 This is PowerBar - The last progressbar-library you'll ever need.
 
