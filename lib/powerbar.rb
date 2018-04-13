@@ -308,14 +308,20 @@ class PowerBar
   end
 
   def terminal_width
+    require 'io/console'
+    rows, cols = IO.console.winsize
+    cols - 1
+  rescue LoadError #io/console not in ruby < 1.9.3
     if /solaris/ =~ RUBY_PLATFORM && (`stty` =~ /\brows = (\d+).*\bcolumns = (\d+)/)
       w, r = [$2, $1]
+    elsif Gem.win_platform?
+      w, r = `stty size 2>NUL`.split.reverse
     else
       w, r = `stty size 2>/dev/null`.split.reverse
     end
     w = `tput cols` unless w
     w = w.to_i if w
-    w
+    w - 1
   end
 
   private
