@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.description = %q{The last progressbar-library you'll ever need}
   s.license     = "MIT"
 
+  s.required_ruby_version = '> 1.9.3'
   s.add_dependency "hashie", ">= 1.1.0"
 
   s.files         = `git ls-files`.split("\n").reject {|e| e.start_with? 'ass/'}
