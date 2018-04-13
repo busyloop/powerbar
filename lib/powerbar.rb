@@ -310,7 +310,8 @@ class PowerBar
 
   def terminal_width
     rows, cols = IO.console.winsize
-    cols - 1
+    cols -= 1 if Gem.win_platform?
+    cols
   end
 
   private
