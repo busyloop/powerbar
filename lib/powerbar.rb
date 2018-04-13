@@ -22,6 +22,7 @@
 
 require 'powerbar/version'
 require 'hashie/mash'
+require 'io/console'
 
 #
 # This is PowerBar - The last progressbar-library you'll ever need.
@@ -308,14 +309,9 @@ class PowerBar
   end
 
   def terminal_width
-    if /solaris/ =~ RUBY_PLATFORM && (`stty` =~ /\brows = (\d+).*\bcolumns = (\d+)/)
-      w, r = [$2, $1]
-    else
-      w, r = `stty size 2>/dev/null`.split.reverse
-    end
-    w = `tput cols` unless w
-    w = w.to_i if w
-    w
+    rows, cols = IO.console.winsize
+    cols -= 1 if Gem.win_platform?
+    cols
   end
 
   private
